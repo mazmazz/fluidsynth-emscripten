@@ -305,19 +305,19 @@ elseif ( WIN32 )
     )
 elseif ( EMSCRIPTEN_SUPPORT )
   if ( EMSCRIPTEN_STATIC )
-    set ( emscripten_suffix "-${LIB_VERSION_INFO}.a" )
+    set ( emscripten_suffix ".a" )
   elseif ( EMSCRIPTEN_SIDE_MODULE )
-    set ( emscripten_suffix "-${LIB_VERSION_INFO}.wasm" )
+    set ( emscripten_suffix ".wasm" )
   else ( EMSCRIPTEN_STATIC )
-    set ( emscripten_suffix "-${LIB_VERSION_INFO}.js" )
+    set ( emscripten_suffix ".js" )
   endif ( EMSCRIPTEN_STATIC )
   set_target_properties ( libfluidsynth
-    PROPERTIES
-    NO_SONAME TRUE
+      PROPERTIES
+      NO_SONAME TRUE
       PUBLIC_HEADER "${public_HEADERS}"
       PREFIX "lib"
       OUTPUT_NAME "fluidsynth"
-    SUFFIX ${emscripten_suffix}
+      SUFFIX ${emscripten_suffix}
   )
 else ( MACOSX_FRAMEWORK )
   set_target_properties ( libfluidsynth
