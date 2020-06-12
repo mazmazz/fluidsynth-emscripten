@@ -368,11 +368,32 @@ target_link_libraries ( fluidsynth
     ${FLUID_LIBS}
 )
 
+else ( NOT EMSCRIPTEN_SUPPORT )
+
+set ( EM_CMAKE_EXECUTABLE_SUFFIX ${CMAKE_EXECUTABLE_SUFFIX} )
+
+# HACK: Can't use native CMAKE_EXECUTABLE_SUFFIX because that's ".js"
+# Per CMAKE docs, CMAKE_EXECUTABLE_SUFFIX is ".exe" on Windows and "" on MACOSX and Linux.
+if ( WINDOWS_SUPPORT )
+  set ( CMAKE_EXECUTABLE_SUFFIX ".exe" )
+else ( WINDOWS_SUPPORT )
+  set ( CMAKE_EXECUTABLE_SUFFIX "" )
+endif ( WINDOWS_SUPPORT )
+
+endif ( NOT EMSCRIPTEN_SUPPORT )
+
 if ( MACOSX_FRAMEWORK )
   install ( TARGETS fluidsynth libfluidsynth
     RUNTIME DESTINATION ${BIN_INSTALL_DIR}
     FRAMEWORK DESTINATION ${FRAMEWORK_INSTALL_DIR}
     ARCHIVE DESTINATION ${FRAMEWORK_INSTALL_DIR}
+)
+elseif ( EMSCRIPTEN_SUPPORT )
+  install ( TARGETS libfluidsynth
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+    PUBLIC_HEADER DESTINATION ${INCLUDE_INSTALL_DIR}/fluidsynth 
 )
 else ( MACOSX_FRAMEWORK )
   install ( TARGETS fluidsynth libfluidsynth
@@ -395,4 +416,7 @@ ExternalProject_Add(gentables
 )
 add_dependencies(libfluidsynth-OBJ gentables)
 
-endif ( NOT EMSCRIPTEN_SUPPORT )
+if ( EMSCRIPTEN_SUPPORT )
+  set ( CMAKE_EXECUTABLE_SUFFIX ${EM_CMAKE_EXECUTABLE_SUFFIX} )
+  unset ( EM_CMAKE_EXECUTABLE_SUFFIX )
+endif ( EMSCRIPTEN_SUPPORT )
