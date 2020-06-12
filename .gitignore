@@ -1,4 +1,6 @@
-build/
+build/*
+!build/fluid_conv_tables.c
+!build/fluid_rvoice_dsp_tables.c
 
 CMakeCache.txt
 CMakeFiles
