@@ -304,14 +304,25 @@ elseif ( WIN32 )
       SOVERSION ${LIB_VERSION_CURRENT}
     )
 elseif ( EMSCRIPTEN_SUPPORT )
-  set_target_properties ( libfluidsynth
-    PROPERTIES
-	  NO_SONAME TRUE
-      PUBLIC_HEADER "${public_HEADERS}"
-      PREFIX "lib"
-      OUTPUT_NAME "fluidsynth"
-	  SUFFIX "-${LIB_VERSION_INFO}.js"
-  )
+  if ( EMSCRIPTEN_STATIC )
+    set_target_properties ( libfluidsynth
+      PROPERTIES
+      NO_SONAME TRUE
+        PUBLIC_HEADER "${public_HEADERS}"
+        PREFIX "lib"
+        OUTPUT_NAME "fluidsynth"
+      SUFFIX "-${LIB_VERSION_INFO}.a"
+    )
+  else ( EMSCRIPTEN_STATIC )
+    set_target_properties ( libfluidsynth
+      PROPERTIES
+      NO_SONAME TRUE
+        PUBLIC_HEADER "${public_HEADERS}"
+        PREFIX "lib"
+        OUTPUT_NAME "fluidsynth"
+      SUFFIX "-${LIB_VERSION_INFO}.js"
+    )
+  endif ( EMSCRIPTEN_STATIC )
 else ( MACOSX_FRAMEWORK )
   set_target_properties ( libfluidsynth
     PROPERTIES
